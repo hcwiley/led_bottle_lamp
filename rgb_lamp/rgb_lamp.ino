@@ -1,8 +1,12 @@
 int REDPin = 6;    // RED pin of the LED to PWM pin 4
 int GREENPin = 5;  // GREEN pin of the LED to PWM pin 5
 int BLUEPin = 3;   // BLUE pin of the LED to PWM pin 6
-int brightness = 0; // LED brightness
 int increment = 5;  // brightness increment
+
+int ser_buf = 0;
+boolean has_unread = false;
+int del = 20;
+int min_pow = 100;
 
 void setup()
 {
@@ -15,51 +19,77 @@ void setup()
   Serial.print("hey");
 }
 
-int ser_buf = 0;
+void clearMessages(){
+  has_unread = false;
+  analogWrite(REDPin, 0);
+  analogWrite(GREENPin, 0);
+  analogWrite(BLUEPin, min_pow);
+}
+
+void setMessages(int count){
+  has_unread = true;
+  //int pow = map(count, 0, 10, 0, 255);
+  analogWrite(REDPin, min_pow);
+  analogWrite(GREENPin, 0);
+  analogWrite(BLUEPin, 0);
+}
+
+void doAnimation(){
+  int pow = min_pow;
+  int g = 0;
+  while( pow < 255 ){
+    if( has_unread ) {
+      analogWrite(REDPin, pow);
+      analogWrite(BLUEPin, 0);
+    }
+    else {
+      analogWrite(REDPin, 0);
+      analogWrite(BLUEPin, pow);
+    }
+    analogWrite(GREENPin, 0);
+    pow += increment;
+    delay(del);
+  }
+  while( g < 255 ){
+    analogWrite(GREENPin, g);
+    g += increment;
+    delay(del);
+  }
+  while( g > 0 ){
+    analogWrite(GREENPin, g);
+    g -= increment;
+    delay(del);
+  }
+  while( pow > min_pow ){
+    if( has_unread ) {
+      analogWrite(REDPin, pow);
+      analogWrite(BLUEPin, 0);
+    }
+    else {
+      analogWrite(REDPin, 0);
+      analogWrite(BLUEPin, pow);
+    }
+    analogWrite(GREENPin, 0);
+    pow -= increment;
+    delay(del);
+  }
+}
+
 void loop()
 {
-  while( (ser_buf = Serial.available()) == 0 ){}
-  char dir = Serial.read();
-  ser_buf--;
-  Serial.print("ser buf ");
-  Serial.println(ser_buf);
-  while(ser_buf > 0){
-    Serial.read();
-    ser_buf--;
+  while( (ser_buf = Serial.available()) == 0 ){
+    doAnimation();
   }
+  char dir = Serial.read();
   // if its c, clear the LEDs. well make it blue...
   if(dir == 'c'){
-    analogWrite(REDPin, 0);
-    analogWrite(GREENPin, 0);
-    analogWrite(BLUEPin, 255);
+    clearMessages();
   }
   else if(dir == 'n'){
     delay(2);
     while(!Serial.available()){}
     int count = (int)(char)Serial.read();
-    int pow = map(count, 0, 10, 0, 255);
-    analogWrite(REDPin, pow);
-    analogWrite(GREENPin, 0);
-    analogWrite(BLUEPin, 0);
+    setMessages(count);
   }
-  //int del = 15;
-  //int r, g, b;
-  //r = g = b = 0;
-  //while( r < 255 ){
-    //while( g < 255 ){
-        //g += increment;
-        //analogWrite(GREENPin, g);
-        //delay(del);
-      //while( b < 255 ){
-        //b += increment;
-        //analogWrite(BLUEPin, b);
-        //delay(del);
-      //}
-    //}
-    //analogWrite(REDPin, r);
-    //r += increment;
-    //delay(del);
-  //}
-  //delay(1000);
 }
 
