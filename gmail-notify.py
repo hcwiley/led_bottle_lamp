@@ -8,7 +8,10 @@ if not SERIAL_PORT:
 
 ser = serial.Serial(SERIAL_PORT, 9600)
 
-ser.write('i')
+while( ser.inWaiting() == 0 ):
+  ser.write('i')
+  time.sleep(1)
+
 
 USERNAME = os.environ.get('GMAIL_USERNAME') or False
 PASSWORD = os.environ.get('GMAIL_PASSWORD') or False
@@ -23,13 +26,13 @@ if not PASSWORD:
 
 DEBUG = 1
 
-MAIL_CHECK_FREQ = 10      # check mail every 60 seconds
+MAIL_CHECK_FREQ = 1      # check mail every 60 seconds
 
 last_count = 0
 
 def newMessages(count):
   ser.write('n')
-  ser.write(count)
+  ser.write(chr(count))
 
 def clearMessages():
   ser.write('c')
@@ -44,10 +47,9 @@ while True:
   if DEBUG:
     print "You have", mail_count, "new emails!"
 
-  if mail_count != last_count:
-    if mail_count > last_count:
-      newMessages(mail_count)
-    else:
-      clearMessages()
+  if mail_count > 0:
+    newMessages(10)
+  else:
+    clearMessages()
 
   time.sleep(MAIL_CHECK_FREQ)
