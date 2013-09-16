@@ -8,6 +8,8 @@ if not SERIAL_PORT:
 
 ser = serial.Serial(SERIAL_PORT, 9600)
 
+ser.write('i')
+
 USERNAME = os.environ.get('GMAIL_USERNAME') or False
 PASSWORD = os.environ.get('GMAIL_PASSWORD') or False
 
