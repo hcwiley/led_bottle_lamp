@@ -16,7 +16,8 @@ void setup()
   Serial.begin(9600);
   while( Serial.available() == 0 ){}
   Serial.read();
-  Serial.print("hey");
+  delay(20);
+  Serial.println("hey");
 }
 
 void clearMessages(){
