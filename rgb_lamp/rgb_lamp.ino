@@ -15,71 +15,40 @@ void setup()
 void loop()
 {
 
-  int del = 15;
-  brightness = constrain(brightness, 0, 255);
-  brightness = 0;
-  while( brightness < 255 ){
-    analogWrite(REDPin, brightness);
-    analogWrite(GREENPin, brightness);
-    analogWrite(BLUEPin, brightness);
-    brightness += increment;
-    delay(del);
-  }
-  while( brightness >= 0 ){
-    analogWrite(REDPin, brightness);
-    analogWrite(GREENPin, brightness);
-    analogWrite(BLUEPin, brightness);
-    brightness -= increment;
-    delay(del);
-  }
-  delay(1000);
-  brightness = 0;
-  while( brightness < 255 ){
-    analogWrite(REDPin, brightness);
-    analogWrite(GREENPin, 0);
-    analogWrite(BLUEPin, 0);
-    brightness += increment;
-    delay(del);
-  }
-  while( brightness >= 0 ){
-    analogWrite(REDPin, brightness);
-    analogWrite(GREENPin, 0);
-    analogWrite(BLUEPin, 0);
-    brightness -= increment;
-    delay(del);
-  }
-  delay(1000);
-  brightness = 0;
-  while( brightness < 255 ){
+  while(!Serial.available()){}
+  char dir = Serial.read();
+  // if its c, clear the LEDs. well make it blue...
+  if(dir == 'c'){
     analogWrite(REDPin, 0);
     analogWrite(GREENPin, 0);
-    analogWrite(BLUEPin, brightness);
-    brightness += increment;
-    delay(del);
+    analogWrite(BLUEPin, 120);
   }
-  while( brightness >=0 ){
-    analogWrite(REDPin, 0);
+  else if(dir == 'n'){
+    while(!Serial.available()){}
+    int count = (int)(char)Serial.read();
+    int pow = map(count, 0, 10, 0, 255);
+    analogWrite(REDPin, pow);
     analogWrite(GREENPin, 0);
-    analogWrite(BLUEPin, brightness);
-    brightness -= increment;
-    delay(del);
-  }
-  delay(1000);
-  brightness = 0;
-  while( brightness < 255 ){
-    analogWrite(REDPin, 0);
-    analogWrite(GREENPin, brightness);
     analogWrite(BLUEPin, 0);
-    brightness += increment;
-    delay(del);
   }
-  while( brightness >= 0 ){
-    analogWrite(REDPin, 0);
-    analogWrite(GREENPin, brightness);
-    analogWrite(BLUEPin, 0);
-    brightness -= increment;
-    delay(del);
-  }
-  delay(1000);
+  //int del = 15;
+  //int r, g, b;
+  //r = g = b = 0;
+  //while( r < 255 ){
+    //while( g < 255 ){
+        //g += increment;
+        //analogWrite(GREENPin, g);
+        //delay(del);
+      //while( b < 255 ){
+        //b += increment;
+        //analogWrite(BLUEPin, b);
+        //delay(del);
+      //}
+    //}
+    //analogWrite(REDPin, r);
+    //r += increment;
+    //delay(del);
+  //}
+  //delay(1000);
 }
 
