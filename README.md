@@ -14,3 +14,7 @@ repo for led bottle lamp
     $ export GMAIL_USERNAME={your_gmail_username} #the part before the @
     $ export GMAIL_PASSWORD={your_gmail_password}
     $ export SERIAL_PORT={serial_port_where_arduino_is}
+
+## running
+
+    $ python gmail-notify.py
