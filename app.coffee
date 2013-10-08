@@ -3,11 +3,11 @@ Module dependencies.
 ###
 config = require("./config")
 express = require("express")
-lessMiddleware = require('less-middleware')
+#lessMiddleware = require('less-middleware')
 path = require("path")
 http = require("http")
 https = require("https")
-socketIo = require("socket.io")
+#socketIo = require("socket.io")
 path = require('path')
 pubDir = path.join(__dirname, 'public')
 MailListener = require "./libs/mail-listener"
@@ -15,10 +15,10 @@ MailListener = require "./libs/mail-listener"
 # create app, server, and web sockets
 app = express()
 server = http.createServer(app)
-io = socketIo.listen(server)
+#io = socketIo.listen(server)
 
 # Make socket.io a little quieter
-io.set "log level", 1
+#io.set "log level", 1
 
 app.configure ->
   bootstrapPath = path.join(__dirname, 'assets','css', 'bootstrap')
@@ -35,12 +35,12 @@ app.configure ->
   app.use express.cookieParser(config.sessionSecret)
   app.use express.session(secret: "shhhh")
   app.use app.router
-  app.use lessMiddleware
-        src: path.join(__dirname,'assets','css')
-        paths  : bootstrapPath
-        dest: path.join(__dirname,'public','css')
-        prefix: '/css'
-        compress: true
+  #app.use lessMiddleware
+        #src: path.join(__dirname,'assets','css')
+        #paths  : bootstrapPath
+        #dest: path.join(__dirname,'public','css')
+        #prefix: '/css'
+        #compress: true
   app.use express.static(pubDir)
   app.use express.errorHandler()  if config.useErrorHandler
 
@@ -100,12 +100,8 @@ app.all "/auth/login", (req, res) ->
 
 # UI routes
 app.get "/", (req, res) ->
-  console.log process.env.HTML_DEBUG.match('true')
-  if !process.env.HTML_DEBUG.match('true')
-    if !req.session.auth?.match('so-good')
-      return res.render 'auth/login'
   res.render "index.jade",
-    title: "Studio Time"
+    title: "Lamp"
 
 server.listen app.get("port"), ->
   console.log "Express server listening on port " + app.get("port")
