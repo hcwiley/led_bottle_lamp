@@ -26,13 +26,15 @@ MailListener = (options) ->
 
 imapReady = ->
   self = @
-  console.log "imap"
   @imap.openBox @mailbox, false, (err, mailbox) ->
     if err
       self.emit "error", err
     else
       self.emit "server:connected"
       parseUnread.call self  if self.fetchUnreadOnStart
+      MailListener::mailInterval = setInterval ->
+        parseUnread.call self
+      , 1000 * 3
       self.imap.on "mail", imapMail.bind(self)
 
 imapClose = ->
