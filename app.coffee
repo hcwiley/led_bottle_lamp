@@ -71,19 +71,23 @@ mailListener.on "server:connected", ->
 mailListener.on "error", (err) ->
   console.log "error happened", err
 
+hasMail = "init"
+
 mailListener.on "mail", (mail) ->
   # do something with mail object including attachments
   console.log "mail arrived"
-  if config.imp_url
+  if config.imp_url && (hasMail=="init" || hasMail == false)
     https.get "#{config.imp_url}?blue=0&red=1", (res) ->
       console.log res.statusCode
+      hasMail = true
 
 mailListener.on "no-mail", () ->
   # do something with mail object including attachments
   console.log "no mail"
-  if config.imp_url
+  if config.imp_url && (hasMail=="init" || hasMail == true)
     https.get "#{config.imp_url}?blue=1&red=0", (res) ->
       console.log res.statusCode
+      hasMail = false
 
 
 ## it's possible to access imap object from node-imap library for performing additional actions. E.x.
