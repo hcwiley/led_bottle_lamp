@@ -75,7 +75,7 @@ hasMail = "init"
 
 mailListener.on "mail", (mail) ->
   # do something with mail object including attachments
-  console.log "mail arrived"
+  console.log "mail arrived && #{hasMail}"
   if config.imp_url && (hasMail=="init" || hasMail == false)
     https.get "#{config.imp_url}?blue=0&red=1", (res) ->
       console.log res.statusCode
@@ -83,7 +83,7 @@ mailListener.on "mail", (mail) ->
 
 mailListener.on "no-mail", () ->
   # do something with mail object including attachments
-  console.log "no mail"
+  console.log "no mail && #{hasMail}"
   if config.imp_url && (hasMail=="init" || hasMail == true)
     https.get "#{config.imp_url}?blue=1&red=0", (res) ->
       console.log res.statusCode
