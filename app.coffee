@@ -76,6 +76,7 @@ hasMail = "init"
 mailListener.on "mail", (mail) ->
   # do something with mail object including attachments
   console.log "mail arrived && #{hasMail}"
+  #console.log mail
   if config.imp_url && (hasMail=="init" || hasMail == false)
     console.log "sending to imp"
     hasMail = true
